@@ -1,11 +1,14 @@
 const app = require("./app")
 const cors = require("cors")
+require("dotenv").config()
 app.use(cors({
     origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
 }))
-require("dotenv").config()
+
+require("./db") // Connect to MongoDB
 
 const authRouter = require("./routes/auth")
 app.use("/api", authRouter)
