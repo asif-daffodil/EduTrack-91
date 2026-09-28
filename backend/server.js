@@ -7,8 +7,11 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 }))
-
 require("./db") // Connect to MongoDB
+const cookieParser = require("cookie-parser")
+app.use(cookieParser())
+
+
 
 const authRouter = require("./routes/auth")
 app.use("/api", authRouter)
