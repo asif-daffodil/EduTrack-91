@@ -16,6 +16,9 @@ app.use(cookieParser())
 const authRouter = require("./routes/auth")
 app.use("/api", authRouter)
 
+const adminRouter = require("./routes/admin")
+app.use("/api", adminRouter)
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}`)
 })

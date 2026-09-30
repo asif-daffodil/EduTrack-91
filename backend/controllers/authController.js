@@ -38,11 +38,46 @@ const me = async (req, res) => {
     const id = req?.user?.id
 
     try {
-        const user = await User.find({id})
-        res.status(200).json({user})
-    }catch (err) {
+        const user = await User.find({ id })
+        res.status(200).json({ user })
+    } catch (err) {
         res.status(500).json({ message: "Internal server error" })
     }
+}
+
+const changePassword = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { oldPass, newPass } = req.body
+
+        if (!oldPass || !newPass) {
+            return res.status(400).json({ message: "Old password and new password is require" })
+        }
+
+        const user = await User.findById(id)
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+
+        const isOldPassValid = await bcrypt.compare(oldPass, user.password)
+
+        if (!isOldPassValid) {
+            return res.status(401).json({ message: "Invalid old password" })
+        }
+
+        const hashNewPass = await bcrypt.hash(newPass, +process.env.SALT_ROUNDS)
+
+        await User.findByIdAndUpdate(id, { password: hashNewPass })
+
+        res.status(200).json({ message: "Password changes successfully" })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ message: "Internal server error" })
+    }
+
 }
 
 const logout = (req, res) => {
@@ -60,5 +95,6 @@ const logout = (req, res) => {
 module.exports = {
     login,
     me,
+    changePassword,
     logout
 }
