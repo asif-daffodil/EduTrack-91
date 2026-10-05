@@ -19,6 +19,9 @@ app.use("/api", authRouter)
 const adminRouter = require("./routes/admin")
 app.use("/api", adminRouter)
 
+const adminStudentRouter = require("./routes/adminStudent")
+app.use("/api", adminStudentRouter)
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}`)
 })
